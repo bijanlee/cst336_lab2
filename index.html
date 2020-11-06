@@ -15,13 +15,14 @@
                 //event Listeners
                 $("button").on("click", gradeQuiz);
                 
-                //Question 5 imgaes
+                //Question 5 images
                 $(".q5Choice").on("click", function() {
                     $(".q5Choice").css("background", "");
                     $(this).css("background", "rgb(255, 255, 0)");
                 });
                 
                 displayQ4Choices();
+                displayQ9Choices();
                 
                 function displayQ4Choices(){
                     
@@ -31,6 +32,17 @@
                     for (let i = 0; i < q4ChoicesArray.length; i++) {
                         $("#q4Choices").append(` <input type="radio" name="q4" id="${q4ChoicesArray[i]}"
                             value="${q4ChoicesArray[i]}"> <label for="${q4ChoicesArray[i]}"> ${q4ChoicesArray[i]}</label>`);
+                    }
+                }
+                
+                function displayQ9Choices(){
+                    
+                    let q9ChoicesArray = ["Washington DC", "Louisiana", "Pennsylvania", "New Mexico"];
+                    q9ChoicesArray = _.shuffle(q9ChoicesArray);
+                    
+                    for (let i = 0; i < q9ChoicesArray.length; i++) {
+                        $("#q9Choices").append(` <input type="radio" name="q9" id="${q9ChoicesArray[i]}"
+                            value="${q9ChoicesArray[i]}"> <label for="${q9ChoicesArray[i]}"> ${q9ChoicesArray[i]}</label>`);
                     }
                 }
                 
@@ -47,7 +59,7 @@
                     $(`#q${index}Feedback`).html("Correct!");
                     $(`#q${index}Feedback`).attr("class", "bg-success text-white");
                     $(`#markImg${index}`).html("<img src = 'img/checkmark.png'>");
-                    score += 20;
+                    score += 10;
                 }
                 
                 function wrongAnswer(index){
@@ -69,6 +81,10 @@
                     let q1Response = $("#q1").val().toLowerCase();
                     let q2Response = $("#q2").val();
                     let q4Response = $("input[name=q4]:checked").val();
+                    let q6Response = $("#q6").val().toLowerCase();
+                    let q7Response = $("#q7").val();
+                    let q9Response = $("input[name=q9]:checked").val();
+                    let q10Response = $("#q10").val().toLowerCase();
                     
                     //Question 1
                     if(q1Response == "sacramento") {
@@ -106,9 +122,57 @@
                         wrongAnswer(5);
                     }
                     
+                    //Question 6
+                    if(q6Response == "austin") {
+                        rightAnswer(6);
+                    }else {
+                        wrongAnswer(6);
+                    }
+                    
+                    //Question 7
+                    if(q7Response == "al") {
+                        rightAnswer(7);
+                    }else {
+                        wrongAnswer(7);
+                    }
+                    
+                    //Question 8
+                    if ($("#California").is(":checked") && $("#Texas").is(":checked") 
+                    && !$("#Oregon").is(":checked") && !$("#Alabama").is(":checked")){
+                        rightAnswer(8);
+                    }else {
+                        wrongAnswer(8);
+                    }
+                    
+                    //Question 9
+                    if(q9Response == "Washington DC") {
+                        rightAnswer(9);
+                    }else {
+                        wrongAnswer(9);
+                    }
+                    
+                    //Question 10
+                    if(q10Response == "50") {
+                        rightAnswer(10);
+                    }else {
+                        wrongAnswer(10);
+                    }
+                    
                     $("#totalScore").html(`Total Score: ${score}`);
                     $("#totalAttempts").html(`Total Attempts: ${++attempts}`);
                     localStorage.setItem("total_attempts", attempts);
+                    
+                    if (score < 80) {
+                        $("#totalScore").css("color", "red");
+                    }else {
+                        $("#totalScore").css("color", "green");
+                    }
+                    
+                    if (score > 80) {
+                        $("#congrats").html(`Great Job!`);
+                    }else {
+                        $("#congrats").html("");
+                    }
                 }
                 
             })
@@ -149,18 +213,57 @@
         <div id="q4Feedback"></div>
         <br><br>
         
-        <h3><span id="markImg5"></span>What iamge is in the Great Seal of the State of California?</h3>
+        <h3><span id="markImg5"></span>What image is in the Great Seal of the State of California?</h3>
         <img src="img/seal1.png" alt="Seal 1" class="q5Choice" id="seal1">
         <img src="img/seal2.png" alt="Seal 2" class="q5Choice" id="seal2">
         <img src="img/seal3.png" alt="Seal 3" class="q5Choice" id="seal3">
         <div id="q5Feedback"></div>
         <br><br>
         
+        <h3><span id="markImg6"></span>What is the capital of Texas?</h3>
+        <input type="text" id="q6">
+        <br><br>
+        <div id="q6Feedback"></div>
+        <br><br>
+        
+        <h3><span id="markImg7"></span>What is the biggest state by land area?</h3>
+        <select id="q7">
+            <option value="">Select One</option>
+            <option value="tx">Texas</option>
+            <option value="ca">California</option>
+            <option value="al">Alaska</option>
+            <option value="fl">Florida</option>
+        </select>
+        <br><br>
+        <div id="q7Feedback"></div>
+        <br>
+        
+        <h3><span id="markImg8"></span>Which states have more than 10 million people?</h3>
+        <input type="checkbox" id="California"> <label for="California"> California </label>
+        <input type="checkbox" id="Oregon"> <label for="Oregon"> Oregon </label>
+        <input type="checkbox" id="Texas"> <label for="Texas"> Texas </label>
+        <input type="checkbox" id="Alabama"> <label for="Alabama"> Alabama </label>
+        <br><br>
+        <div id="q8Feedback"></div>
+        <br>
+        
+        <h3><span id="markImg9"></span>Which is not a State?</h3>
+        <div id="q9Choices"></div>
+        <div id="q9Feedback"></div>
+        <br><br>
+        
+        <h3><span id="markImg10"></span>How many US States are there?</h3>
+        <input type="text" id="q10">
+        <br><br>
+        <div id="q10Feedback"></div>
+        <br><br>
+        
         <h3 id="validationFdbk" class="bg-danger text-white"></h3>
         <button class="btn btn-outline-success"> Submit Quiz </button>
         <br>
-        <h2 id="totalScore" class="text-info"></h2>
+        <h2 id="totalScore"></h2>
         
         <h3 id="totalAttempts"></h3>
+        <h3 id="congrats"></h3>
     </body>
 </html>
